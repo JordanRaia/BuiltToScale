@@ -10,45 +10,67 @@ public class PlayerSizeController : MonoBehaviour
     public float maxScale = 6.0f;
     public float minScale = 0.25f;
 
+    private bool canInteract = false;
+    private string interactionTag = "";
+
     // Update is called once per frame
     void Update()
     {
-        // Get input for increasing or decreasing size
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        // Check for the interaction button press when within range
+        if (canInteract && Input.GetKeyDown(KeyCode.E))
         {
-            IncreaseSize();
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            DecreaseSize();
-        }
-
-        void IncreaseSize()
-        {
-            float newScale = transform.localScale.x * scaleMultiplierIncrease;
-
-            // Clamp the scale to the maxScale
-            if (newScale > maxScale)
+            if (interactionTag == "IncreaseSize")
             {
-                newScale = maxScale;
+                IncreaseSize();
             }
-
-            // Apply the new scale uniformly to all axes
-            transform.localScale = new Vector3(newScale, newScale, newScale);
-        }
-
-        void DecreaseSize()
-        {
-            float newScale = transform.localScale.x * scaleMultiplierDecrease;
-
-            // Clamp the scale to the minScale
-            if (newScale < minScale)
+            else if (interactionTag == "DecreaseSize")
             {
-                newScale = minScale;
+                DecreaseSize();
             }
-
-            // Apply the new scale uniformly to all axes
-            transform.localScale = new Vector3(newScale, newScale, newScale);
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        // When the player enters the trigger, allow interaction and store the tag
+        if (collision.CompareTag("IncreaseSize") || collision.CompareTag("DecreaseSize"))
+        {
+            canInteract = true;
+            interactionTag = collision.tag;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // When the player exits the trigger, disable interaction
+        if (collision.CompareTag("IncreaseSize") || collision.CompareTag("DecreaseSize"))
+        {
+            canInteract = false;
+            interactionTag = "";
+        }
+    }
+
+    private void IncreaseSize()
+    {
+        float newScale = transform.localScale.x * scaleMultiplierIncrease;
+
+        if (newScale > maxScale)
+        {
+            newScale = maxScale;
+        }
+
+        transform.localScale = new Vector3(newScale, newScale, newScale);
+    }
+
+    private void DecreaseSize()
+    {
+        float newScale = transform.localScale.x * scaleMultiplierDecrease;
+
+        if (newScale < minScale)
+        {
+            newScale = minScale;
+        }
+
+        transform.localScale = new Vector3(newScale, newScale, newScale);
     }
 }
