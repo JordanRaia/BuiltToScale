@@ -9,9 +9,18 @@ public class PlayerSizeController : MonoBehaviour
     public float scaleMultiplierDecrease = 0.5f;
     public float maxScale = 6.0f;
     public float minScale = 0.25f;
+    public float scaleSpeed = 2.0f; // speed of scaling transition
 
     private bool canInteract = false;
     private string interactionTag = "";
+
+    private Vector3 targetScale;
+    private bool isScaling = false;
+
+    void Start()
+    {
+        targetScale = transform.localScale;
+    }
 
     // Update is called once per frame
     void Update()
@@ -21,11 +30,24 @@ public class PlayerSizeController : MonoBehaviour
         {
             if (interactionTag == "IncreaseSize")
             {
-                IncreaseSize();
+                SetTargetSize(transform.localScale.x * scaleMultiplierIncrease);
             }
             else if (interactionTag == "DecreaseSize")
             {
-                DecreaseSize();
+                SetTargetSize(transform.localScale.x * scaleMultiplierDecrease);
+            }
+        }
+
+        // Smoothly interpolate the scale towards the target scale
+        if (isScaling)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * scaleSpeed);
+
+            // Stop scaling when close enough to the target scale
+            if (Vector3.Distance(transform.localScale, targetScale) < 0.01f)
+            {
+                transform.localScale = targetScale;
+                isScaling = false;
             }
         }
     }
@@ -48,6 +70,14 @@ public class PlayerSizeController : MonoBehaviour
             canInteract = false;
             interactionTag = "";
         }
+    }
+
+    private void SetTargetSize(float newSize)
+    {
+        // Clamp the size to the defined min and max values
+        newSize = Mathf.Clamp(newSize, minScale, maxScale);
+        targetScale = new Vector3(newSize, newSize, newSize);
+        isScaling = true;
     }
 
     private void IncreaseSize()
