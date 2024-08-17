@@ -52,9 +52,10 @@ public class PlayerMovement : MonoBehaviour
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
             isFacingRight = !isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+
+            // Instead of directly modifying the scale, rotate the character on the Y axis
+            transform.Rotate(0f, 180f, 0f);
         }
     }
+
 }
