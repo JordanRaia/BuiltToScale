@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private float horizontal;
-    private float speed = 8f;
+    private float baseSpeed = 8f;
     private float jumpingPower = 16f;
     private bool isFacingRight = true;
 
@@ -13,10 +13,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
 
+    private PlayerSizeController sizeController;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        sizeController = GetComponent<PlayerSizeController>();
     }
 
     // Update is called once per frame
@@ -44,6 +46,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //adjust speed based on the player's size
+        float playerScale = transform.localScale.x;
+        float speed = baseSpeed / playerScale;
+
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
     }
 
