@@ -490,6 +490,7 @@ MonoBehaviour:
   playerRb: {fileID: 1740287131}
   playerSizeController: {fileID: 1740287136}
   requiredScaleToBreak: 2
+  particleEffectPrefab: {fileID: 6786829637544423094, guid: 859e2f7a9e81f764f8d727b9fe8a8095, type: 3}
 --- !u!66 &361797336
 CompositeCollider2D:
   m_ObjectHideFlags: 0
