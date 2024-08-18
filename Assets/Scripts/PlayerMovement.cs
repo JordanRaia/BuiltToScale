@@ -35,8 +35,6 @@ public class PlayerMovement : MonoBehaviour
             float currentScale = sizeController.GetCurrentScale();
             float adjustedJumpPower = jumpingPower / currentScale;
 
-            Debug.Log("jumping power is: " + adjustedJumpPower.ToString());
-
             rb.velocity = new Vector2(rb.velocity.x, adjustedJumpPower);
             animator.SetBool("isJumping", true);
         }
