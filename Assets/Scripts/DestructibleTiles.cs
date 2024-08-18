@@ -10,6 +10,9 @@ public class DestructibleTiles : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Rigidbody2D playerRb;
 
+    [SerializeField] private PlayerSizeController playerSizeController;
+    [SerializeField] private float requiredScaleToBreak = 2.0f; // Scale required to break tiles
+
     private bool wasInTheAir = false; // Track if the player was in the air on the last frame
     private float fallVelocityThreshold = -3f; // Velocity threshold to consider it a fall
 
@@ -33,6 +36,8 @@ public class DestructibleTiles : MonoBehaviour
 
     private void CheckAndCrackTilesUnderPlayer()
     {
+        float currentScale = playerSizeController.GetCurrentScale(); // Get current scale
+
         Vector3[] pointsToCheck = {
             groundCheck.position,
             new Vector3(groundCheck.position.x - 0.5f, groundCheck.position.y, groundCheck.position.z),
@@ -44,7 +49,7 @@ public class DestructibleTiles : MonoBehaviour
         foreach (var point in pointsToCheck)
         {
             Vector3Int tilePosition = destructibleTilemap.WorldToCell(point);
-            if (destructibleTilemap.HasTile(tilePosition))
+            if (destructibleTilemap.HasTile(tilePosition) && currentScale >= requiredScaleToBreak)
             {
                 if (!tileInteractions.ContainsKey(tilePosition))
                 {

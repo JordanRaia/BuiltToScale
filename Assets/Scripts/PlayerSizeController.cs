@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class PlayerSizeController : MonoBehaviour
     private Vector3 targetScale;
     private bool isScaling = false;
 
-    public int maxCollectibles = 99;
+    public int maxCollectibles = 25;
     private int currentCollectibles = 0;
 
     void Start()
@@ -57,6 +58,7 @@ public class PlayerSizeController : MonoBehaviour
             {
                 transform.localScale = targetScale;
                 isScaling = false;
+                UpdateUIScale();
             }
         }
     }
@@ -81,9 +83,13 @@ public class PlayerSizeController : MonoBehaviour
         {
             UIManager.instance.UpdateCollectibleCount(currentCollectibles);
         }
-        else
+    }
+
+    private void UpdateUIScale()
+    {
+        if (UIManager.instance != null)
         {
-            Debug.LogError("UIManager instance not found.");
+            UIManager.instance.UpdateScaleText(transform.localScale.x);
         }
     }
 
@@ -137,5 +143,10 @@ public class PlayerSizeController : MonoBehaviour
         }
 
         transform.localScale = new Vector3(newScale, newScale, newScale);
+    }
+
+    internal float GetCurrentScale()
+    {
+        return transform.localScale.x;
     }
 }
