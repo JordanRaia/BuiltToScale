@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private float horizontal;
     private float baseSpeed = 8f;
-    private float jumpingPower = 16f;
+    private float jumpingPower = 16f; //base
     private bool isFacingRight = false;
 
     [SerializeField] private Rigidbody2D rb;
@@ -31,7 +31,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            float currentScale = sizeController.GetCurrentScale();
+            float adjustedJumpPower = jumpingPower / currentScale;
+
+            Debug.Log("jumping power is: " + adjustedJumpPower.ToString());
+
+            rb.velocity = new Vector2(rb.velocity.x, adjustedJumpPower);
             animator.SetBool("isJumping", true);
         }
 
