@@ -6,16 +6,7 @@ using UnityEngine.SceneManagement;
 //using UnityEngine.SceneManagement;
 
 
-public class PauseMenu : MonoBehaviour
-{
-    [SerializeField] GameObject pauseMenu;
 
-    public void Pause()
-    {
-        pauseMenu.SetActive(true);
-        Time.timeScale = 0;
-    }
-}
 
 
 public class PlayerMovement : MonoBehaviour
@@ -28,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
-    //[SerializeField] private ParticleSystem moveParticles;
+    [SerializeField] private ParticleSystem moveParticles;
     //[SerializeField] GameObject PauseMenu;
 
     //public PauseMenu pauseMenu;
@@ -46,14 +37,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            Time.timeScale = 0;
-            pauseMenu.SetActive(true);
-            //Pausemenu.gameObject.SetActive(!Pausemenu.gameObject.activeSelf);
-        }
 
         horizontal = Input.GetAxisRaw("Horizontal");
 
