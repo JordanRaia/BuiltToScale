@@ -2,6 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
+
+
+
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,6 +20,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private ParticleSystem moveParticles;
+    //[SerializeField] GameObject PauseMenu;
+
+    //public PauseMenu pauseMenu;
 
     private PlayerSizeController sizeController;
     Animator animator;
@@ -28,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         horizontal = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetButtonDown("Jump") && IsGrounded())

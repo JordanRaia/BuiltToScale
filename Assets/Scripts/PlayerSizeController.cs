@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerSizeController : MonoBehaviour
 {
+
+
     //variables to control the scale
     public float scaleMultiplierIncrease = 2.0f;
     public float scaleMultiplierDecrease = 0.5f;
@@ -29,6 +32,7 @@ public class PlayerSizeController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (currentCollectibles > 0)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow) && transform.localScale.x * scaleMultiplierIncrease <= maxScale)
