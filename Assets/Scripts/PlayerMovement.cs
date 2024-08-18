@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private ParticleSystem moveParticles;
 
     private PlayerSizeController sizeController;
     Animator animator;
@@ -46,6 +47,23 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Flip();
+
+        HandleMovementParticles();
+    }
+
+    private void HandleMovementParticles()
+    {
+        // Check if the player is moving and grounded
+        if (Math.Abs(rb.velocity.x) > 0.1 && IsGrounded())
+        {
+            if (!moveParticles.isPlaying)
+                moveParticles.Play();
+        }
+        else
+        {
+            if (moveParticles.isPlaying)
+                moveParticles.Stop();
+        }
     }
 
     private bool IsGrounded()
