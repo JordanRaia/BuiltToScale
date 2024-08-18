@@ -12,6 +12,7 @@ public class DestructibleTiles : MonoBehaviour
 
     [SerializeField] private PlayerSizeController playerSizeController;
     [SerializeField] private float requiredScaleToBreak = 2.0f; // Scale required to break tiles
+    [SerializeField] private GameObject particleEffectPrefab; // Reference to the particle system prefab
 
     private bool wasInTheAir = false; // Track if the player was in the air on the last frame
     private float fallVelocityThreshold = -3f; // Velocity threshold to consider it a fall
@@ -32,6 +33,12 @@ public class DestructibleTiles : MonoBehaviour
             CheckAndCrackTilesUnderPlayer();
         }
         wasInTheAir = !isGrounded;
+    }
+
+    private void TriggerParticleEffect(Vector3Int tilePosition)
+    {
+        Vector3 worldPosition = destructibleTilemap.CellToWorld(tilePosition) + new Vector3(0.5f, 0.5f, 0); // Center the effect
+        Instantiate(particleEffectPrefab, worldPosition, Quaternion.identity);
     }
 
     private void CheckAndCrackTilesUnderPlayer()
@@ -65,6 +72,7 @@ public class DestructibleTiles : MonoBehaviour
                 else if (tileInteractions[tilePosition] == 2)
                 {
                     destructibleTilemap.SetTile(tilePosition, null); // Remove the tile after the second interaction
+                    TriggerParticleEffect(tilePosition); // Trigger particle effects at the tile's position
                 }
             }
         }
