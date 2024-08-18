@@ -17,6 +17,9 @@ public class PlayerSizeController : MonoBehaviour
     private Vector3 targetScale;
     private bool isScaling = false;
 
+    public int maxCollectibles = 99;
+    private int currentCollectibles = 0;
+
     void Start()
     {
         targetScale = transform.localScale;
@@ -25,18 +28,24 @@ public class PlayerSizeController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Check for the interaction button press when within range
-        if (canInteract && Input.GetKeyDown(KeyCode.E))
+        if (currentCollectibles > 0)
         {
-            if (interactionTag == "IncreaseSize")
+            if (Input.GetKeyDown(KeyCode.UpArrow) && transform.localScale.x * scaleMultiplierIncrease <= maxScale)
             {
                 SetTargetSize(transform.localScale.x * scaleMultiplierIncrease);
+                currentCollectibles--;
+                UpdateUI();
             }
-            else if (interactionTag == "DecreaseSize")
+
+            if (Input.GetKeyDown(KeyCode.DownArrow) && transform.localScale.x * scaleMultiplierDecrease >= minScale)
             {
                 SetTargetSize(transform.localScale.x * scaleMultiplierDecrease);
+                currentCollectibles--;
+                UpdateUI();
             }
         }
+        // Check for the interaction button press when within range
+
 
         // Smoothly interpolate the scale towards the target scale
         if (isScaling)
@@ -49,6 +58,32 @@ public class PlayerSizeController : MonoBehaviour
                 transform.localScale = targetScale;
                 isScaling = false;
             }
+        }
+    }
+
+    public void AddCollectible()
+    {
+        if (currentCollectibles < maxCollectibles)
+        {
+            currentCollectibles++;
+            UpdateUI();
+        }
+        else
+        {
+            Debug.Log("Max collectibles reached: " + maxCollectibles);
+        }
+    }
+
+    private void UpdateUI()
+    {
+        // Update the UI to show the number of collectibles
+        if (UIManager.instance != null)
+        {
+            UIManager.instance.UpdateCollectibleCount(currentCollectibles);
+        }
+        else
+        {
+            Debug.LogError("UIManager instance not found.");
         }
     }
 
