@@ -25,7 +25,7 @@ public class UIManager : MonoBehaviour
         collectibleCountText.text = "Crystals: " + count.ToString();
     }
 
-    public void UpdateScaleText(float scale)
+    public void UpdateScaleText(string scale)
     {
         scaleText.text = "Scale: " + scale.ToString();
     }

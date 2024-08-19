@@ -27,6 +27,26 @@ public class PlayerSizeController : MonoBehaviour
     void Start()
     {
         targetScale = transform.localScale;
+        UpdateUIScale(parseVectorString(targetScale.ToString()));
+    }
+
+    private string parseVectorString(string str)
+    {
+        // remove characters in vector string
+        var charsToRemove = new string[] { "(", ")", "," };
+        foreach (var c in charsToRemove)
+        {
+            str = str.Replace(c, string.Empty);
+        }
+
+        //remove everything except first number
+        int index = str.IndexOf(" ");
+        if (index >= 0)
+        {
+            str = str.Substring(0, index);
+        }
+
+        return str;
     }
 
     // Update is called once per frame
@@ -55,6 +75,7 @@ public class PlayerSizeController : MonoBehaviour
         // Smoothly interpolate the scale towards the target scale
         if (isScaling)
         {
+            UpdateUIScale(parseVectorString(targetScale.ToString()));
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * scaleSpeed);
 
             // Stop scaling when close enough to the target scale
@@ -62,7 +83,9 @@ public class PlayerSizeController : MonoBehaviour
             {
                 transform.localScale = targetScale;
                 isScaling = false;
-                UpdateUIScale();
+
+                char[] parseChars = { '(', ',' };
+                string targetScaleParsed = targetScale.ToString().Trim(parseChars);
             }
         }
     }
@@ -89,11 +112,11 @@ public class PlayerSizeController : MonoBehaviour
         }
     }
 
-    private void UpdateUIScale()
+    private void UpdateUIScale(string scale)
     {
         if (UIManager.instance != null)
         {
-            UIManager.instance.UpdateScaleText(transform.localScale.x);
+            UIManager.instance.UpdateScaleText(scale);
         }
     }
 
