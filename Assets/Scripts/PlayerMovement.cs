@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             float currentScale = sizeController.GetCurrentScale();
-            float adjustedJumpPower = jumpingPower / currentScale;
+            float adjustedJumpPower = jumpingPower / (1 + 0.5f * (currentScale - 1));
 
             rb.velocity = new Vector2(rb.velocity.x, adjustedJumpPower);
             animator.SetBool("isJumping", true);
@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.5f, groundLayer);
+        return Physics2D.OverlapCircle(groundCheck.position, 0.4f, groundLayer);
     }
 
     private void FixedUpdate()
