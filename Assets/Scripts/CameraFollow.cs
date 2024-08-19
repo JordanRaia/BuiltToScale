@@ -21,7 +21,7 @@ public class CameraFollow : MonoBehaviour
     {
         // Calculate the current orthographic size based on the player's scale
         float playerScale = player.localScale.x;
-        cam.orthographicSize = initialOrthographicSize * playerScale;
+        cam.orthographicSize = initialOrthographicSize * (1 + 0.5f * (playerScale - 1));
 
         // Adjust the camera's position to follow the player
         Vector3 offset = new Vector3(0, cameraHeight, -cameraDistance);
