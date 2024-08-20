@@ -7,9 +7,9 @@ public class MainMenu : MonoBehaviour
 {
     public void PlayGame()
     {
-        //SceneManager.LoadSceneAsync(2);
+        SceneManager.LoadSceneAsync(2);
         //MusicManager.Instance.StopMusic();
-        SceneManager.LoadScene("Level1");
+        // SceneManager.LoadScene("Level1");1
     }
 
     public void QuitGame()
