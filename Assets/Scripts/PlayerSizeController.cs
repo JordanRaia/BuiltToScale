@@ -14,6 +14,7 @@ public class PlayerSizeController : MonoBehaviour
     public float maxScale = 6.0f;
     public float minScale = 0.25f;
     public float scaleSpeed = 2.0f; // speed of scaling transition
+    public float initialSize = 1.0f;
 
     private bool canInteract = false;
     private string interactionTag = "";
@@ -26,6 +27,7 @@ public class PlayerSizeController : MonoBehaviour
 
     void Start()
     {
+        transform.localScale = new Vector3(initialSize, initialSize, initialSize);
         targetScale = transform.localScale;
         UpdateUIScale(parseVectorString(targetScale.ToString()));
     }
@@ -55,14 +57,14 @@ public class PlayerSizeController : MonoBehaviour
 
         if (currentCollectibles > 0)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow) && transform.localScale.x * scaleMultiplierIncrease <= maxScale)
+            if (Input.GetKeyDown(KeyCode.W) && transform.localScale.x * scaleMultiplierIncrease <= maxScale && !isScaling)
             {
                 SetTargetSize(transform.localScale.x * scaleMultiplierIncrease);
                 currentCollectibles--;
                 UpdateUI();
             }
 
-            if (Input.GetKeyDown(KeyCode.DownArrow) && transform.localScale.x * scaleMultiplierDecrease >= minScale)
+            if (Input.GetKeyDown(KeyCode.S) && transform.localScale.x * scaleMultiplierDecrease >= minScale && !isScaling)
             {
                 SetTargetSize(transform.localScale.x * scaleMultiplierDecrease);
                 currentCollectibles--;
