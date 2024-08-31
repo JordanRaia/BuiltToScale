@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class PlayerMovement : MonoBehaviour
     private PlayerSizeController sizeController;
     Animator animator;
 
+    private bool moveLeft;
+    private bool moveRight;
+    private bool jump;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,16 +34,22 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Adjust horizontal movement based on button presses
+        if (moveLeft)
+            horizontal = -1f;
+        else if (moveRight)
+            horizontal = 1f;
+        else
+            horizontal = 0f;
 
-        horizontal = Input.GetAxisRaw("Horizontal");
-
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (jump && IsGrounded())
         {
             float currentScale = sizeController.GetCurrentScale();
             float adjustedJumpPower = jumpingPower / (1 + 0.5f * (currentScale - 1));
 
             rb.velocity = new Vector2(rb.velocity.x, adjustedJumpPower);
             animator.SetBool("isJumping", true);
+            jump = false; // reset jump flag
         }
 
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
@@ -47,13 +58,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Flip();
-
         HandleMovementParticles();
     }
 
     private void HandleMovementParticles()
     {
-        // Check if the player is moving and grounded
         if (Math.Abs(rb.velocity.x) > 0.1 && IsGrounded())
         {
             if (!moveParticles.isPlaying)
@@ -73,7 +82,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //adjust speed based on the player's size
         float playerScale = transform.localScale.x;
         float speed = baseSpeed / playerScale;
 
@@ -81,7 +89,6 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
         animator.SetFloat("yVelocity", rb.velocity.y);
 
-        // Set 'isJumping' to false if the player is grounded
         if (IsGrounded())
         {
             animator.SetBool("isJumping", false);
@@ -93,9 +100,33 @@ public class PlayerMovement : MonoBehaviour
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
             isFacingRight = !isFacingRight;
-
-            // Instead of directly modifying the scale, rotate the character on the Y axis
             transform.Rotate(0f, 180f, 0f);
         }
+    }
+
+    // UI Button methods
+    public void OnMoveLeftPressed()
+    {
+        moveLeft = true;
+    }
+
+    public void OnMoveLeftReleased()
+    {
+        moveLeft = false;
+    }
+
+    public void OnMoveRightPressed()
+    {
+        moveRight = true;
+    }
+
+    public void OnMoveRightReleased()
+    {
+        moveRight = false;
+    }
+
+    public void OnJumpPressed()
+    {
+        jump = true;
     }
 }

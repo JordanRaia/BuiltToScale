@@ -10,16 +10,18 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // The original keyboard input check is removed since UI buttons will now handle the pause and resume functionality.
+    }
+
+    public void OnPauseButtonPressed()
+    {
+        if (isPaused)
         {
-            if (isPaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            Resume();
+        }
+        else
+        {
+            Pause();
         }
     }
 

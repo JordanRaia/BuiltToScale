@@ -6,9 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class PlayerSizeController : MonoBehaviour
 {
-
-
-    //variables to control the scale
     public float scaleMultiplierIncrease = 2.0f;
     public float scaleMultiplierDecrease = 0.5f;
     public float maxScale = 6.0f;
@@ -51,36 +48,14 @@ public class PlayerSizeController : MonoBehaviour
         return str;
     }
 
-    // Update is called once per frame
     void Update()
     {
-
-        if (currentCollectibles > 0)
-        {
-            if (Input.GetKeyDown(KeyCode.W) && transform.localScale.x * scaleMultiplierIncrease <= maxScale && !isScaling)
-            {
-                SetTargetSize(transform.localScale.x * scaleMultiplierIncrease);
-                currentCollectibles--;
-                UpdateUI();
-            }
-
-            if (Input.GetKeyDown(KeyCode.S) && transform.localScale.x * scaleMultiplierDecrease >= minScale && !isScaling)
-            {
-                SetTargetSize(transform.localScale.x * scaleMultiplierDecrease);
-                currentCollectibles--;
-                UpdateUI();
-            }
-        }
-        // Check for the interaction button press when within range
-
-
-        // Smoothly interpolate the scale towards the target scale
+        // Handle scaling input via UI buttons instead of keyboard
         if (isScaling)
         {
             UpdateUIScale(parseVectorString(targetScale.ToString()));
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * scaleSpeed);
 
-            // Stop scaling when close enough to the target scale
             if (Vector3.Distance(transform.localScale, targetScale) < 0.01f)
             {
                 transform.localScale = targetScale;
@@ -89,6 +64,26 @@ public class PlayerSizeController : MonoBehaviour
                 char[] parseChars = { '(', ',' };
                 string targetScaleParsed = targetScale.ToString().Trim(parseChars);
             }
+        }
+    }
+
+    public void OnIncreaseSizePressed()
+    {
+        if (currentCollectibles > 0 && transform.localScale.x * scaleMultiplierIncrease <= maxScale && !isScaling)
+        {
+            SetTargetSize(transform.localScale.x * scaleMultiplierIncrease);
+            currentCollectibles--;
+            UpdateUI();
+        }
+    }
+
+    public void OnDecreaseSizePressed()
+    {
+        if (currentCollectibles > 0 && transform.localScale.x * scaleMultiplierDecrease >= minScale && !isScaling)
+        {
+            SetTargetSize(transform.localScale.x * scaleMultiplierDecrease);
+            currentCollectibles--;
+            UpdateUI();
         }
     }
 
@@ -124,7 +119,6 @@ public class PlayerSizeController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // When the player enters the trigger, allow interaction and store the tag
         if (collision.CompareTag("IncreaseSize") || collision.CompareTag("DecreaseSize"))
         {
             canInteract = true;
@@ -134,7 +128,6 @@ public class PlayerSizeController : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // When the player exits the trigger, disable interaction
         if (collision.CompareTag("IncreaseSize") || collision.CompareTag("DecreaseSize"))
         {
             canInteract = false;
@@ -144,34 +137,9 @@ public class PlayerSizeController : MonoBehaviour
 
     private void SetTargetSize(float newSize)
     {
-        // Clamp the size to the defined min and max values
         newSize = Mathf.Clamp(newSize, minScale, maxScale);
         targetScale = new Vector3(newSize, newSize, newSize);
         isScaling = true;
-    }
-
-    private void IncreaseSize()
-    {
-        float newScale = transform.localScale.x * scaleMultiplierIncrease;
-
-        if (newScale > maxScale)
-        {
-            newScale = maxScale;
-        }
-
-        transform.localScale = new Vector3(newScale, newScale, newScale);
-    }
-
-    private void DecreaseSize()
-    {
-        float newScale = transform.localScale.x * scaleMultiplierDecrease;
-
-        if (newScale < minScale)
-        {
-            newScale = minScale;
-        }
-
-        transform.localScale = new Vector3(newScale, newScale, newScale);
     }
 
     internal float GetCurrentScale()
