@@ -9,11 +9,16 @@ public class PortalInteraction : MonoBehaviour
     public GameObject player; // Reference to the player object
     public GameObject particleEffectPrefab; // Your particle system prefab
     public string sceneToLoad; // Name of the scene to load
+    public Button interactButton; // Reference to the UI button for interaction
+
+    private bool isPlayerInPortal = false; // Tracks if the player is in the portal trigger area
 
     void Start()
     {
         if (portalText != null)
             portalText.gameObject.SetActive(false);
+
+        interactButton.onClick.AddListener(OnInteractButtonPressed);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -21,6 +26,7 @@ public class PortalInteraction : MonoBehaviour
         if (other.gameObject == player)
         {
             ShowPortalText(true);
+            isPlayerInPortal = true; // Set to true when the player enters the portal trigger area
         }
     }
 
@@ -29,12 +35,13 @@ public class PortalInteraction : MonoBehaviour
         if (other.gameObject == player)
         {
             ShowPortalText(false);
+            isPlayerInPortal = false; // Set to false when the player leaves the portal trigger area
         }
     }
 
-    void Update()
+    void OnInteractButtonPressed()
     {
-        if (Input.GetKeyDown(KeyCode.E) && portalText.gameObject.activeSelf)
+        if (isPlayerInPortal) // Check if the player is in the portal trigger area
         {
             StartCoroutine(DisappearAndLoadScene());
         }
@@ -42,15 +49,12 @@ public class PortalInteraction : MonoBehaviour
 
     IEnumerator DisappearAndLoadScene()
     {
-        // Instantiate the particle effect at the player's position and destroy the player
         Instantiate(particleEffectPrefab, player.transform.position, Quaternion.identity);
 
         player.SetActive(false);
 
-        // Wait for the particle effect to finish
         yield return new WaitForSeconds(2); // Adjust this time to match your particle effect's duration
 
-        // Load the new scene
         SceneManager.LoadScene(sceneToLoad);
     }
 

@@ -25,27 +25,27 @@ public class LevelSelect : MonoBehaviour
 
     public void Level1()
     {
-        SceneManager.LoadSceneAsync(3);
+        SceneManager.LoadScene("Level1");
         // SceneManager.LoadScene("Select Level", LoadSceneMode.Additive);
     }
     public void Level2()
     {
-        SceneManager.LoadSceneAsync(4);
+        SceneManager.LoadScene("Level2");
         // SceneManager.LoadScene("Select Level", LoadSceneMode.Additive);
     }
     public void Level3()
     {
-        SceneManager.LoadSceneAsync(5);
+        SceneManager.LoadScene("Level3");
         // SceneManager.LoadScene("Select Level", LoadSceneMode.Additive);
     }
     public void Level4()
     {
-        SceneManager.LoadSceneAsync(6);
+        SceneManager.LoadScene("Level4");
         // SceneManager.LoadScene("Select Level", LoadSceneMode.Additive);
     }
     public void Level5()
     {
-        SceneManager.LoadSceneAsync(7);
+        SceneManager.LoadScene("Level5");
         // SceneManager.LoadScene("Select Level", LoadSceneMode.Additive);
     }
 }
